@@ -9,7 +9,6 @@
 
 
 # Entities: Log-levels, LogOutput,  LogMessage
-# Patterns: Multiple output destinations - Strategy Pattern, Configuration mechanism - Factory Pattern
 
 
 from enum import Enum
@@ -32,6 +31,8 @@ class LogMessage:
         self.message_content=message_content
     def format(self)->str:
         return f"[{self.timestamp.isoformat()}] [{self.log_level.name}] {self.message_content}"
+
+# Strategy pattern - for the different output destinations
 
 class LogOutputDestination(ABC):
     @abstractmethod
@@ -56,6 +57,8 @@ class DatabaseOutput(LogOutputDestination):
     def write(self, formatted_message:str)->None:
         print(f"[DB-WRITE] {formatted_message}")
 
+# Factory pattern - For creating and adding new Output destinations
+
 class LogOutputFactory:
     _outputs={
         "console":ConsoleOutput,
@@ -73,7 +76,7 @@ class LogOutputFactory:
     def register(cls,name:str,output_cls):
         cls._outputs[name]=output_cls
         
-
+# Singleton pattern - For one Logging Manager
 
 class LoggingManager:
     _instance=None
